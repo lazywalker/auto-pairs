@@ -1,7 +1,7 @@
 " Insert or delete brackets, parens, quotes in pairs.
 " Maintainer:	JiangMiao <jiangfriend@gmail.com>
-" Contributor: camthompson
-" Last Change:  2019-02-02
+" Contributor: camthompson, lazywalker
+" Last Change:  2020-10-12
 " Version: 2.0.0
 " Homepage: http://www.vim.org/scripts/script.php?script_id=3599
 " Repository: https://github.com/jiangmiao/auto-pairs
@@ -40,11 +40,6 @@ endf
 
 if !exists('g:AutoPairsMapBS')
   let g:AutoPairsMapBS = 1
-end
-
-" Map <C-h> as the same BS
-if !exists('g:AutoPairsMapCh')
-  let g:AutoPairsMapCh = 1
 end
 
 if !exists('g:AutoPairsMapCR')
@@ -410,8 +405,11 @@ func! AutoPairsReturn()
       " conflict with javascript and coffee
       " javascript   need   indent new line
       " coffeescript forbid indent new line
+      " tintin forbid indent new line
       if &filetype == 'coffeescript' || &filetype == 'coffee'
         return "\<ESC>".cmd."k==o"
+      elseif &filetype == 'tt'
+        return "\<ESC>".cmd."ko"
       else
         return "\<ESC>".cmd."=ko"
       endif
@@ -544,10 +542,6 @@ func! AutoPairsInit()
     " Use <C-R> instead of <expr> for issue #14 sometimes press BS output strange words
     execute 'inoremap <buffer> <silent> <BS> <C-R>=AutoPairsDelete()<CR>'
   end
-
-  if g:AutoPairsMapCh
-    execute 'inoremap <buffer> <silent> <C-h> <C-R>=AutoPairsDelete()<CR>'
-  endif
 
   if g:AutoPairsMapSpace
     " Try to respect abbreviations on a <SPACE>
